@@ -16,6 +16,8 @@ extension DeveloperPreview {
 
 struct DeveloperPreview {
     static let instance = DeveloperPreview()
+    private init() {}
+    static let howeVM = HomeViewModel()
     
     let coin = Coin(
         id: "bitcoin",
