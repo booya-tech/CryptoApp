@@ -19,7 +19,6 @@ struct HomeView: View {
             
             // Content Layer
             VStack {
-                // Header
                 homeHeader
                 
                 columnTitles
