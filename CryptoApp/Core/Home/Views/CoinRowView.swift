@@ -48,7 +48,7 @@ extension CoinRowView {
                 .frame(minWidth: 30)
                 .font(.caption)
             // Currency Image
-            Circle()
+            CoinImageView(coin: coin)
                 .frame(width: 30, height: 30)
             
             // Currency Name
