@@ -21,6 +21,10 @@ struct HomeView: View {
             VStack {
                 homeHeader
                 
+                SearchBarView(searchText: $vm.searchText)
+                    .keyboardType(.asciiCapable)
+                    .autocorrectionDisabled()
+                
                 columnTitles
                 
                 if !showPortfolio {
