@@ -28,7 +28,12 @@ class HomeViewModel: ObservableObject {
     init() {
         addSubscribers()
     }
+    //MARK: - Public method
+    func updatePortfolio(coin: Coin, amount: Double) {
+        portfolioDataService.updatePortfolio(coin: coin, amount: amount)
+    }
     
+    //MARK: - Private method
     private func addSubscribers() {
         // Updates allCoins
         $searchText
