@@ -18,7 +18,7 @@ class MarketDataService {
         getMarketData()
     }
     
-    private func getMarketData() {
+    func getMarketData() {
         guard let url = URL(string: urlString) else {
             print("❌ ERROR: Invalid URL")
             return

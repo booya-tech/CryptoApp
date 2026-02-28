@@ -29,7 +29,7 @@ class PortfolioDataService {
     //MARK: - Public method
     func updatePortfolio(coin: Coin, amount: Double) {
         if let entity = savedEntities.first(where: { $0.coinID == coin.id }) {
-            if entity.amount > 0 {
+            if amount > 0 {
                 update(entity: entity, amount: amount)
             } else {
                 delete(entity: entity)

@@ -37,11 +37,17 @@ struct HomeView: View {
                 if !showPortfolio {
                     allCoinList
                         .transition(.move(edge: .leading))
+                        .refreshable {
+                            vm.reloadData()
+                        }
                 }
                 
                 if showPortfolio {
                     portFolioList
                         .transition(.move(edge: .trailing))
+                        .refreshable {
+                            vm.reloadData()
+                        }
                 }
                 
                 Spacer(minLength: 0)
