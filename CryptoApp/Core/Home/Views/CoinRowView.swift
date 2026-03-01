@@ -22,6 +22,8 @@ struct CoinRowView: View {
             rightColumn
         }
         .font(.subheadline)
+        // add invisible background to expand entire row for clickable
+        .background(Color.theme.background.opacity(0.0001))
     }
 }
 
