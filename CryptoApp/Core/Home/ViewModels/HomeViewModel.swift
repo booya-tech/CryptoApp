@@ -69,7 +69,7 @@ class HomeViewModel: ObservableObject {
             .map(mapAllCoinsToPortfolioCoins)
             .sink { [weak self] (returnedCoins) in
                 guard let self = self else { return }
-                
+                 
                 self.portfolioCoins = self.filterPortfolioCoinsIfNeeded(coins: returnedCoins)
             }
             .store(in: &cancellable)
