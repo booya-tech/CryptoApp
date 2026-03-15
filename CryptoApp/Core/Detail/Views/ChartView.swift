@@ -12,6 +12,9 @@ struct ChartView: View {
     let maxY: Double
     let minY: Double
     let lineColor: Color
+    let endDate: Date
+    let startDate: Date
+    @State private var percentage: CGFloat = 0
     
     init(coin: Coin) {
         data = coin.sparklineIn7D?.price ?? []
@@ -20,6 +23,9 @@ struct ChartView: View {
         
         let priceChange = (data.last ?? 0) - (data.first ?? 0)
         lineColor = priceChange > 0 ? Color.theme.green : Color.theme.red
+        
+        endDate = Date(coinGeckoString: coin.lastUpdated ?? "")
+        startDate = endDate.addingTimeInterval(-7*24*60*60)
     }
     
     /// Math
@@ -29,21 +35,24 @@ struct ChartView: View {
     /// 52,000 - data point
     /// 52,000 - 50,000 - 2,000 / 10,000 = 20%
     var body: some View {
-        chartView
-            .frame(height: 200)
-            .background {
-                chartBackground
-            }
-            .overlay(alignment: .leading) {
-                VStack {
-                    Text(maxY.formattedWithAbbreviations())
-                    Spacer()
-                    let median  = ((maxY + minY) / 2).formattedWithAbbreviations()
-                    Text(median)
-                    Spacer()
-                    Text(minY.formattedWithAbbreviations())
+        VStack {
+            chartView
+                .frame(height: 200)
+                .background {
+                    chartBackground
                 }
+                .overlay(chartYAxis.padding(.horizontal, 4)
+                         , alignment: .leading)
+            chartDateLabels
+                .padding(.horizontal, 4)
+        }
+        .font(.caption)
+        .foregroundStyle(Color.theme.secondaryText)
+        .onAppear {
+            withAnimation(.linear(duration: 2.0)) {
+                percentage = 1.0
             }
+        }
     }
 }
 
@@ -52,7 +61,7 @@ struct ChartView: View {
 }
 
 extension ChartView {
-    private var chartView: some View {
+    private var chartView: some View { 
         GeometryReader { geometry in
             Path { path in
                 for index in data.indices {
@@ -63,13 +72,18 @@ extension ChartView {
                     let yPosition = (1 - CGFloat((data[index] - minY) / yAxis)) * geometry.size.height
                     
                     if index == 0 {
-                        path.move(to: CGPoint(x: xPosition, y: yAxis))
+                        path.move(to: CGPoint(x: xPosition, y: yPosition))
                     }
                     
                     path.addLine(to: CGPoint(x: xPosition, y: yPosition))
                 }
             }
+            .trim(from: 0, to: percentage)
             .stroke(lineColor, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+            .shadow(color: lineColor, radius: 10, x: 0.0, y: 10)
+            .shadow(color: lineColor.opacity(0.5), radius: 20, x: 0.0, y: 10)
+            .shadow(color: lineColor.opacity(0.3), radius: 30, x: 0.0, y: 10)
+            .shadow(color: lineColor.opacity(0.2), radius: 40, x: 0.0, y: 10)
         }
     }
     
@@ -80,6 +94,25 @@ extension ChartView {
             Divider()
             Spacer()
             Divider()
+        }
+    }
+    
+    private var chartYAxis: some View {
+        VStack {
+            Text(maxY.formattedWithAbbreviations())
+            Spacer()
+            let median  = ((maxY + minY) / 2).formattedWithAbbreviations()
+            Text(median)
+            Spacer()
+            Text(minY.formattedWithAbbreviations())
+        }
+    }
+    
+    private var chartDateLabels: some View {
+        HStack {
+            Text(startDate.asShortDateString())
+            Spacer()
+            Text(endDate.asShortDateString())
         }
     }
 }
